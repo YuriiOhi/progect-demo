@@ -2,7 +2,7 @@ from typing import Any
 from math import hypot
 
 
-class Point:
+class Vector:
     def __init__(self, x: float = 0.0, y: float = 0.0) -> None:
         self._x = float(x)
         self._y = float(y)
@@ -27,21 +27,45 @@ class Point:
         return f'({self.x}, {self.y})'
 
     def __eq__(self, other: Any) -> bool:
-        self.__check_type(other)
+        self.__check__type(other)
         return self.x == other.x and self.y == other.y
 
     def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def __check_type(self, other: Any) -> None:
+    def __check__type(self, other: Any) -> None:
         if not isinstance(other, self.__class__):
             raise TypeError(f'other param should be of type {self.__class__.__name__}')
 
-    def distance(self, other: Any) -> float:
-        self.__check_type(other)
-        return hypot(self.x - other.x, self.y - other.y)
+    def length(self) -> float:
+        return hypot(self.x, self.y)
+
+    def __iadd__(self, other) -> None:
+        self.__check__type(other)
+        self.x += other.x
+        self.y += other.y
+
+    def __isub__(self, other) -> None:
+        self.__check__type(other)
+        self.x -= other.x
+        self.y -= other.y
+
+    def __add__(self, other) -> Any:
+        self.__check__type(other)
+        tmp = self
+        tmp.__iadd__(other)
+        return tmp
+
+    def __sub__(self, other) -> Any:
+        self.__check__type(other)
+        tmp = self
+        tmp.__isub__(other)
+        return tmp
 
 
 if __name__ == '__main__':  # pragma: no cover
-    point = Point()
-    print(point)
+    vector = Vector(1.1, 1.1)
+    vector2 = Vector(2.2, 2.2)
+    vector3 = vector.__add__(vector2)
+
+    print(vector3)

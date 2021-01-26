@@ -1,3 +1,6 @@
+from typing import Any
+
+
 def prettify_string(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f'value should be of type str: {value}')
@@ -7,9 +10,9 @@ def prettify_string(value: str) -> str:
     return value
 
 
-def check_numeric(value: int) -> object:
+def check_numeric(value: int):
     value = int(value)
-    if value <= 0:
+    if value < 0:
         raise ValueError(f'value should be positive, got {value} instead')
     return value
 
@@ -17,13 +20,13 @@ def check_numeric(value: int) -> object:
 class UnitIsDeadException(Exception):
     pass
 
+
 class Unit:
-    def __init__(self, name: str, hp: int, dmg: int) -> None:
+    def __init__(self, name: str, hp: int, damage: int) -> None:
         self._name = prettify_string(name)
         self._hp = check_numeric(hp)
         self._maxHP = check_numeric(hp)
-        self._dmg = check_numeric(dmg)
-
+        self._damage = check_numeric(damage)
 
     @property
     def name(self) -> str:
@@ -38,48 +41,47 @@ class Unit:
         return self._maxHP
 
     @property
-    def dmg(self) -> int:
-        return self._dmg
+    def damage(self) -> int:
+        return self._damage
 
     @hp.setter
     def hp(self, value) -> None:
         self._hp = check_numeric(value)
 
-    @hp.setter
-    def dmg(self, value) -> None:
-        self._dmg = check_numeric(value)
-
-    def add_hit_points(self, value) -> None:
-        self.__ensure_is_alive(self)
-        self._hp += check_numeric(value)
-        if self._hp > self._maxHP:
-            self._hp = self._maxHP
-
-    def take_damage(self, value) -> None:
-        self.__ensure_is_alive(self)
-        self._hp -= check_numeric(value)
-
-    def attack(self, value) -> None:
-        enemy = Unit(value)
-        enemy.take_damage(self._dmg)
-        enemy.counter_attack(self)
-
-    def counter_attack(self, value ) -> None:
-        enemy = Unit(value)
-        enemy.take_damage(self._dmg / 10)
-
     def __str__(self) -> str:
-        return f'{self.name}: ({self.hp}/{self.maxHP}), damage = {self.dmg}.'
+        return f'{self.name}: ({self.hp}/{self.maxHP}), dmg: {self.damage}'
 
     def __ensure_is_alive(self):
         if self.hp == 0:
             raise UnitIsDeadException()
 
+    def take_damage(self, damage: int) -> None:
+        self.__ensure_is_alive()
+
+        if self.hp - damage < 0:
+            self._hp = 0
+            return
+
+        self.hp -= damage
+
+    def attack(self, enemy: Any) -> None:
+        self.__ensure_is_alive()
+        enemy.take_damage(self.damage)
+        enemy.counter_attack(self)
+
+    def counter_attack(self, enemy: Any) -> None:
+        self.__ensure_is_alive()
+        enemy.take_damage(int(self.damage / 2))
+
 
 if __name__ == '__main__':  # pragma: no cover
-    unit = Unit('SoLdIeR', 100, 10)
+    soldier = Unit('Soldier', 100, 20)
+    warrior = Unit('Warrior', 100, 20)
 
+    print(soldier)
+    print(warrior)
 
-    print(unit)
+    soldier.attack(warrior)
 
-
+    print(soldier)
+    print(warrior)
