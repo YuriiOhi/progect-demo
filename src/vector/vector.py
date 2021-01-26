@@ -65,6 +65,10 @@ class Vector:
 
 if __name__ == '__main__':  # pragma: no cover
     vector = Vector(1.1, 1.1)
+
+    vector.length()
+
+    print(vector.length())
     vector2 = Vector(2.2, 2.2)
     vector3 = vector.__add__(vector2)
 

@@ -27,18 +27,18 @@ class Point:
         return f'({self.x}, {self.y})'
 
     def __eq__(self, other: Any) -> bool:
-        self.__check_type(other)
+        self.__check__type(other)
         return self.x == other.x and self.y == other.y
 
     def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def __check_type(self, other: Any) -> None:
+    def __check__type(self, other: Any) -> None:
         if not isinstance(other, self.__class__):
             raise TypeError(f'other param should be of type {self.__class__.__name__}')
 
     def distance(self, other: Any) -> float:
-        self.__check_type(other)
+        self.__check__type(other)
         return hypot(self.x - other.x, self.y - other.y)
 
 
