@@ -1,6 +1,6 @@
 from typing import Any
 from math import hypot
-
+import copy
 
 class Vector:
     def __init__(self, x: float = 0.0, y: float = 0.0) -> None:
@@ -52,13 +52,13 @@ class Vector:
 
     def __add__(self, other) -> Any:
         self.__check__type(other)
-        tmp = self
+        tmp = copy.deepcopy(self)
         tmp.__iadd__(other)
         return tmp
 
     def __sub__(self, other) -> Any:
         self.__check__type(other)
-        tmp = self
+        tmp = copy.deepcopy(self)
         tmp.__isub__(other)
         return tmp
 
