@@ -20,7 +20,7 @@ def test_prettify_string_exception():
 
 
 @pytest.mark.parametrize('actual, expected', [
-    (100,100),
+    (100, 100),
     (100.0, 100),
     ('100', 100)
 ])
@@ -45,7 +45,8 @@ def test_gun_constructor():
     assert beretta.capacity == 10
     assert beretta.total_shots == 0
     assert beretta.amount == 0
-    assert beretta._is_Ready == False
+    assert not beretta._is_Ready
+
 
 def test_gun_to_string():
     beretta = Gun('Beretta', 10)
@@ -53,13 +54,15 @@ def test_gun_to_string():
     assert str(beretta) == 'The model is: Beretta. The amount is: 0. Total shots made: 0\n'
     # couldn't test the string with multiple \n eg. 'The model is: Beretta\n The amount is: 0\n Total shots made: 0\n''
 
+
 def test_gun_ready():
     beretta = Gun('Beretta', 10)
 
-    assert beretta.ready() == False
+    assert not beretta.ready()
     beretta.prepare()
 
-    assert beretta.ready() == True
+    assert beretta.ready()
+
 
 def test_gun_reload():
     beretta = Gun('Beretta', 10)
@@ -69,6 +72,7 @@ def test_gun_reload():
     beretta.reload()
 
     assert beretta.amount == 10
+
 
 def test_gun_shoot():
     beretta = Gun('Beretta', 10)
@@ -82,6 +86,7 @@ def test_gun_shoot():
 
     assert beretta.amount == 9
     assert beretta.total_shots == 1
+
 
 def test_gun_shoot_exception():
     beretta = Gun('Beretta', 10)
